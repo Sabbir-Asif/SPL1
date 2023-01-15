@@ -100,9 +100,15 @@ bool readImage(PGMImage* pgm,const char* filename)
 void constructImage(PGMImage* pgm, char const* filename)
 {
     FILE* pgmOut = fopen(filename, "wb");
+    if (pgmOut == NULL)
+    {
+        printf("Could not open output text file");
+    }
+    // printing file type
     fprintf(pgmOut,"%c%c\n",pgm->pgmType[0],pgm->pgmType[1]);
-    //fprintf(pgmOut,"\n");
+    // Printing width and height 
     fprintf(pgmOut,"%d %d\n",pgm->width,pgm->height);
+    // Printing maximum grayscale value
     fprintf(pgmOut,"%d\n",pgm->maxValue);
 
     for(int i =0; i < pgm->height; i++)
@@ -120,7 +126,7 @@ void printImageDetails(PGMImage* pgm,const char* filename,const char* filename2)
 	FILE* outputFile = fopen(filename2, "w");
 	if (outputFile == NULL)
     {
-        printf("Could not open file");
+        printf("Could not open output text file");
     }
 	// Retrieving the file extension
 	char* ext = strrchr(filename, '.');
@@ -179,17 +185,17 @@ int main(int argc, char const* argv[])
 	else
 		ipfile = "baboon.pgm";
 	
-	opfile = "outPgm.txt";
+	opfile = "baboonOut.txt";
 	printf("input file : %s\n", ipfile);
 
 	// Process the image and print its details
 	if (readImage(pgm, ipfile))
     {
-        constructImage(pgm,"testOut.pgm");
+        constructImage(pgm,"baboonOut.pgm");
         printImageDetails(pgm, ipfile, opfile);
         negativeImage(pgm);
-        printImageDetails(pgm,ipfile,opfile);
-        constructImage(pgm,"testOut.pgm");
+        printImageDetails(pgm,ipfile,"baboonOutNegative.txt");
+        constructImage(pgm,"baboonOutNegative.pgm");
     }
 
 	return 0;
