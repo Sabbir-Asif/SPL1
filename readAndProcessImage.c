@@ -173,6 +173,54 @@ void negativeImage(PGMImage* pgm)
         }
     }
 }
+// Creating Histogram
+void createHistogram(PGMImage* pgm)
+{
+    int histogram[256];
+    for(int i = 0; i < 256; i++)
+    {
+        histogram[i] = 0;
+    }
+    for(int i = 0; i < pgm->height; i++)
+    {
+        for(int j =0; j < pgm->width; j++)
+        {
+            int x = pgm->data[i][j];
+            histogram[x] += 1;
+        }
+    }
+
+    // Printing histogram
+    printf("Hsitogram : \n\n");
+    for(int i = 0; i < 256; i++)
+    {
+        if(i < 10)
+        {
+            printf("[%d]   | ",i);
+            for(int j = 0; j <= histogram[i]%10; j++)
+            printf("*");
+            printf("(%d)",histogram[i]);
+            printf("\n");
+        }
+        else if(i < 100)
+        {
+            printf("[%d]  | ",i);
+            for(int j = 0; j <= histogram[i]%10; j++)
+            printf("*");
+            printf("(%d)",histogram[i]);
+            printf("\n");
+        }
+        else if(i < 256)
+        {
+            printf("[%d] | ",i);
+            for(int j = 0; j <= histogram[i]%10; j++)
+            printf("*");
+            printf("(%d)",histogram[i]);
+            printf("\n");
+        }
+    }
+    
+}
 // Driver Code
 int main(int argc, char const* argv[])
 {
@@ -196,6 +244,7 @@ int main(int argc, char const* argv[])
         negativeImage(pgm);
         printImageDetails(pgm,ipfile,"baboonOutNegative.txt");
         constructImage(pgm,"baboonOutNegative.pgm");
+        createHistogram(pgm);
     }
 
 	return 0;
