@@ -2,6 +2,7 @@
 
 void brightening(PGMImage* pgm)
 {
+    cout << "---------------------Brightening--------------------\n\n";
     cout << "Input the brightness level between -255 to +255 : ";
     int level;
     cin >> level;
@@ -23,9 +24,11 @@ void brightening(PGMImage* pgm)
            }
         }
     }
+
+    cout << "Operation Successful!\n\n" << endl;
 }
 
-/*
+
 int main(int argc, char const* argv[])
 {
 	//PGMImage* pgm = malloc(sizeof(PGMImage));
@@ -37,19 +40,18 @@ int main(int argc, char const* argv[])
 	if (argc == 2)
 		ipfile = argv[1];
 	else
-		ipfile = "baboon.pgm";
+		ipfile = "moon.pgm";
 	
 	opfile = "outPgm.txt";
-	printf("Input file : %s\n", ipfile);
-
+	printf("\n\nInput file : %s\n", ipfile);
 	// Process the image and print its details
 	if (readImage(pgm, ipfile))
 	{
         brightening(pgm);
-        constructImage(pgm,"brightenOut.pgm");
+        constructImage(pgm,"brightenImage.pgm");
         
 	}
 	return 0;
 }
-*/
+
 

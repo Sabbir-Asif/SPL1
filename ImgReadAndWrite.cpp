@@ -122,7 +122,6 @@ void printImageDetails(PGMImage* pgm, const char* filename,const char* filename2
             fprintf(outputFile,"%d ", pgm->data[i][j]);
         }
 
-        printf("\n");
     }
 
 	// close file
@@ -148,7 +147,7 @@ void constructImage(PGMImage* pgm, char const* filename)
 }
 
 // Driver Code
-int main(int argc, char const* argv[])
+/*int main(int argc, char const* argv[])
 {
 	//PGMImage* pgm = malloc(sizeof(PGMImage));
 	PGMImage* pgm = new PGMImage;
@@ -158,9 +157,9 @@ int main(int argc, char const* argv[])
 	if (argc == 2)
 		ipfile = argv[1];
 	else
-		ipfile = "baboon.pgm";
+		ipfile = "brainAscii.pgm";
 	
-	opfile = "outPgm.txt";
+	opfile = "outOishi.txt";
 	printf("Input file : %s\n", ipfile);
 
 	// Process the image and print its details
@@ -170,4 +169,4 @@ int main(int argc, char const* argv[])
 		constructImage(pgm,"testOut.pgm");
 	}
 	return 0;
-}
+}*/

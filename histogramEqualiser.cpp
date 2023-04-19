@@ -22,8 +22,6 @@ int* createHistogram(PGMImage* pgm)
 
 int* histogramEqualization(PGMImage* pgm, int histogram[])
 {
-	//double pdf[pgm->maxColorValue];
-	//double cdf[pgm->maxColorValue];
     int newGrayLevel[pgm->maxColorValue];
     for(int i =0; i < pgm->maxColorValue; i++)
     {
@@ -98,7 +96,7 @@ int main(int argc, char const* argv[])
 	if (argc == 2)
 		ipfile = argv[1];
 	else
-		ipfile = "baboon.pgm";
+		ipfile = "images.pgm"; 
 	
 	opfile = "outPgm.txt";
 	printf("Input file : %s\n", ipfile);
