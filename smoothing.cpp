@@ -16,7 +16,7 @@ void meanPixel(PGMImage* pgm, const char* ipfile)
             int x = pgm2->data[i-1][j-1] + pgm2->data[i-1][j] + pgm2->data[i-1][j+1];
             int y = pgm2->data[i][j-1] + pgm2->data[i][j] + pgm2->data[i][j+1];
             int z = pgm2->data[i+1][j-1] + pgm2->data[i+1][j] + pgm2->data[i+1][j+1];
-            pgm->data[i][j] = (unsigned char)round(((float)(x + y + z)) / 9);
+            pgm->data[i][j] = round(((float)(x + y + z)) / 9);
         }
     }
 
@@ -29,7 +29,7 @@ int main()
 	const char* ipfile;
 	const char* opfile;
 
-	ipfile = "mri.pgm";
+	ipfile = "baboon.pgm";
 	
 	opfile = "outPgm.txt";
 	printf("Input file : %s\n", ipfile);
