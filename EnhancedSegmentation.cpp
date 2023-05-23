@@ -2,8 +2,9 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#define maxValue 5000
 using namespace std;
-
+int Region[maxValue][maxValue];
 double InitialThresholdValue(BMPImage* bmp)
 {
     double sum = 0.0;
@@ -19,7 +20,194 @@ double InitialThresholdValue(BMPImage* bmp)
     return sum/NumOfPixels;
 }
 
-void CannyEdgeDetection(BMPImage *bmp, const char *ipfile)
+void computeClassAverages(BMPImage* bmp, double& lowerClassAverage, double& upperClassAverage, double threshold)
+{
+    double lowerSum = 0.0;
+    double upperSum = 0.0;
+    int lowerCount = 0;
+    int upperCount = 0;
+
+    for(int row = 0; row < bmp->infoHeader.height; row++)
+    {
+        for(int col = 0; col < bmp->infoHeader.width; col++)
+        {
+            if(bmp->pixel[row][col][0] != 0) {
+                if(bmp->pixel[row][col][0] < threshold)
+                {
+                    lowerSum += bmp->pixel[row][col][0];
+                    lowerCount++;
+                } 
+                else
+                {
+                    upperSum += bmp->pixel[row][col][0];
+                    upperCount++;
+                }
+            }
+        }
+    }
+
+    lowerClassAverage = lowerSum / lowerCount;
+    upperClassAverage = upperSum / upperCount;
+}
+
+bool isThresholdReached(double threshold, double newThreshold, double tolerance)
+{
+    return std::abs(newThreshold - threshold) <= tolerance;
+}
+
+void ApplyThreshold(BMPImage* bmp)
+{
+    double initialThreshold = InitialThresholdValue(bmp);
+    double lowerClassAverage = initialThreshold;
+    double upperClassAverage = initialThreshold;
+    double tolerance = 0.01;
+    double threshold = initialThreshold;
+    computeClassAverages(bmp,lowerClassAverage,upperClassAverage,threshold);
+    double newThreshold = 0.5 * (lowerClassAverage + upperClassAverage);
+    while(!isThresholdReached(threshold, newThreshold, tolerance))
+    {
+        threshold = newThreshold;
+        computeClassAverages(bmp, lowerClassAverage, upperClassAverage, threshold);
+        newThreshold = 0.5 * (lowerClassAverage + upperClassAverage);
+    }
+
+    for(int row = 0; row < bmp->infoHeader.height; row++)
+    {
+        for(int col = 0; col < bmp->infoHeader.width; col++)
+        {
+            if(bmp->pixel[row][col][0] <= threshold)
+            {
+                bmp->pixel[row][col][0] = static_cast<unsigned char>(0);
+                bmp->pixel[row][col][1] = static_cast<unsigned char>(0);
+                bmp->pixel[row][col][2] = static_cast<unsigned char>(0);
+            }
+            else
+            {
+                bmp->pixel[row][col][0] = static_cast<unsigned char>(255);
+                bmp->pixel[row][col][1] = static_cast<unsigned char>(255);
+                bmp->pixel[row][col][2] = static_cast<unsigned char>(255);
+            }
+        }
+    }
+
+}
+
+void CloseContourSearch(BMPImage* bmp,int i0, int j0, int& r)
+{
+    const int dx[] = {-1, -1, 0, 1, 1, 1, 0, -1};
+    const int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
+    int height = bmp->infoHeader.height;
+    int width = bmp->infoHeader.width;
+    int queue[(height * width) + 10][2];
+    int front = 0, rear = 0;
+
+    queue[rear][0] = i0;
+    queue[rear][1] = j0;
+    rear++;
+
+    while(front != rear)
+    {
+        int i = queue[front][0];
+        int j = queue[front][1];
+        front++;
+
+        for(int count = 0; count < 8; count++)
+        {
+            int row = i + dx[count];
+            int col = j + dy[count];
+            if(row >= 0 && row < height && col >= 0 && col < width && bmp->pixel[row][col][0] == bmp->pixel[i][j][0] && Region[row][col] == 0)
+            {
+                Region[row][col] = r;
+                queue[rear][0] = row;
+                queue[rear][1] = col;
+                rear++;
+            }
+        }
+    }
+}
+
+int closedContourMain(BMPImage* bmp)
+{
+    int r = 0;
+    for(int row = 0; row < bmp->infoHeader.height; row++)
+    {
+        for(int col = 0; col < bmp->infoHeader.width; col++)
+        {
+            if(Region[row][col] == 0)
+            {
+                r++;
+                Region[row][col] = r;
+                CloseContourSearch(bmp, row, col, r);
+            }
+        }
+    }
+
+    return r;
+}
+
+void objectSeperation(BMPImage* bmp, BMPImage* bmp2)
+{
+    int height = bmp->infoHeader.height;
+    int width = bmp->infoHeader.width;
+    int pixelCount[height][width];
+    int sumIntensity[height][width];
+    double averageIntensity[height][width];
+    for(int i = 0; i < height; i++)
+    {
+        for(int j = 0; j < width ; j++)
+        {
+            Region[i][j] = 0;
+            pixelCount[i][j] = 0;
+            sumIntensity[i][j] = 0;
+            averageIntensity[i][j] = 0.0;
+        }
+    }
+
+    int numOfRegion = closedContourMain(bmp);
+
+    for(int row = 0; row < height; row++)
+    {
+        for(int col = 0; col < width; col++)
+        {
+            int region = Region[row][col];
+            pixelCount[region][region]++;
+            sumIntensity[region][region] += bmp2->pixel[row][col][0];
+        }
+    }
+
+    for(int r = 1; r <= numOfRegion; r++)
+    {
+        if(pixelCount[r][r] != 0)
+        {
+            averageIntensity[r][r] = static_cast<double>(sumIntensity[r][r] / pixelCount[r][r]);
+        }
+    }
+
+    int maxRegion = 1;
+    double maxIntensity = averageIntensity[1][1];
+    for(int r = 2; r <= numOfRegion; r++)
+    {
+        if(averageIntensity[r][r] > maxIntensity)
+        {
+            maxRegion = r;
+            maxIntensity = averageIntensity[r][r];
+        }
+    }
+
+    for(int row = 0; row < height; row++)
+    {
+        for(int col = 0; col < width; col++)
+        {
+            if(Region[row][col] != maxRegion)
+            {
+                bmp2->pixel[row][col][0] = static_cast<unsigned char>(0);
+                bmp2->pixel[row][col][1] = static_cast<unsigned char>(0);
+                bmp2->pixel[row][col][2] = static_cast<unsigned char>(0);
+            }
+        }
+    }
+}
+void TumorSegmentation(BMPImage *bmp, const char *ipfile)
 {
     BMPImage *bmp2 = new BMPImage;
     if (!readBmpImage(bmp2, ipfile))
@@ -122,8 +310,9 @@ void CannyEdgeDetection(BMPImage *bmp, const char *ipfile)
     }
 
 
-    const char *opfile = "CannyOut.bmp";
-
+    const char *opfile = "TumorOut.bmp";
+    ApplyThreshold(bmp);
+    //objectSeperation(bmp,bmp2);
     constructBmpImage(bmp, opfile);
 }
 
@@ -132,11 +321,11 @@ int main()
 
     BMPImage *bmp = new BMPImage;
     const char *ipfile;
-    ipfile = "f3.bmp";
+    ipfile = "blackbuck.bmp";
     printf("Input file : %s\n", ipfile);
     if (readBmpImage(bmp, ipfile))
     {
-        CannyEdgeDetection(bmp, ipfile);
+        TumorSegmentation(bmp, ipfile);
     }
 
     return 0;
