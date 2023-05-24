@@ -1,9 +1,9 @@
-#include "ImgReadAndWrite.cpp"
+#include "temp2.cpp"
 #include<cmath>
-void convulation(PGMImage* pgm, const char* ipfile)
+void convulation2(PGMImage* pgm, const char* ipfile)
 {
 	PGMImage* pgm2 = new PGMImage;
-	if (!readImage(pgm2, ipfile))
+	if (!readPGMImage(pgm2, ipfile))
 	{
 		cout << "File not Opened in Smoothing function" << endl;
 	}
@@ -16,9 +16,9 @@ void convulation(PGMImage* pgm, const char* ipfile)
                       {-1, -2, -1, 0, 0, 0, 1, 2, 1},
                     };
 
-     int effect;
-     cout << "Enter effects (1, 2) : ";
-     cin >> effect;
+     int effect = 2;
+     //cout << "Enter effects (1, 2) : ";
+     //cin >> effect;
     
     if(effect == 1)
     {
@@ -69,25 +69,28 @@ void convulation(PGMImage* pgm, const char* ipfile)
 
 } 
 
-int main()
+void ConvulationType2Utility()
 {
-	//PGMImage* pgm = malloc(sizeof(PGMImage));
 	PGMImage* pgm = new PGMImage;
 	const char* ipfile;
 	const char* opfile;
-
 	ipfile = "pbmlib.pgm";
-	
-	opfile = "outPgm.txt";
-	printf("Input file : %s\n", ipfile);
- 
-	// Process the image and print its details
-	if (readImage(pgm, ipfile))
+	opfile = "ImageEdgeType2.pgm";
+	if (readPGMImage(pgm, ipfile))
 	{
-        convulation(pgm, ipfile);
-        constructImage(pgm,"ImageEdgeType22.pgm");
-		//printImageDetails(pgm, ipfile, opfile);
-        
+        printf("Input file : %s\n", ipfile);
+        convulation2(pgm, ipfile);
+        constructPGMImage(pgm,"ImageEdgeType2.pgm");
+        printf("Laplacian Convulation2 Operation Successfull!\n");
+        printf("Output File ImageEdgeEfect2.pgm\n");
 	}
-	return 0;
+    else
+    {
+        printf("Error Loading input image in convulation2 utility.");
+    }
 }
+/*
+int main()
+{
+    ConvulationType2Utility();
+}*/

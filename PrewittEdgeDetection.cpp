@@ -1,9 +1,6 @@
-#include"BmpReadAndWrite.cpp"
+#include "temp2.cpp"
 #include<iostream>
 #include<fstream>
-using namespace std;
-
-
 void PrewittEdgeDetection(BMPImage* bmp , const char* ipfile)
 {
     BMPImage* bmp2 = new BMPImage;
@@ -99,17 +96,26 @@ void PrewittEdgeDetection(BMPImage* bmp , const char* ipfile)
 
 }
 
-int main()
+void PrewittUtility()
 {
 	
 	BMPImage* bmp = new BMPImage;
 	const char* ipfile;
-	ipfile = "f3.bmp";
-	printf("Input file : %s\n", ipfile);
+	ipfile = "blackbuck.bmp";
     if(readBmpImage(bmp,ipfile))
     {
+        printf("Input file : %s\n", ipfile);
         PrewittEdgeDetection(bmp,ipfile);
+        printf("Prewitt Edge detection successful!\n");
+        printf("Output file prewittOut.bmp\n");
     }
-	
-	return 0;
+    else
+    {
+        printf("Error Loading input image in prewitt Utility!\n");
+    }
 }
+
+/*int main()
+{
+    PrewittUtility();
+}*/

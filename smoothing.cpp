@@ -1,9 +1,9 @@
-#include "ImgReadAndWrite.cpp"
+#include "temp2.cpp"
 #include<cmath>
 void meanPixel(PGMImage* pgm, const char* ipfile)
 {
 	PGMImage* pgm2 = new PGMImage;
-	if (!readImage(pgm2, ipfile))
+	if (!readPGMImage(pgm2, ipfile))
 	{
 		cout << "File not Opened in Smoothing function" << endl;
 		
@@ -16,31 +16,34 @@ void meanPixel(PGMImage* pgm, const char* ipfile)
             int x = pgm2->data[i-1][j-1] + pgm2->data[i-1][j] + pgm2->data[i-1][j+1];
             int y = pgm2->data[i][j-1] + pgm2->data[i][j] + pgm2->data[i][j+1];
             int z = pgm2->data[i+1][j-1] + pgm2->data[i+1][j] + pgm2->data[i+1][j+1];
-            pgm->data[i][j] = round(((float)(x + y + z)) / 9);
+            pgm->data[i][j] = (unsigned char)round(((float)(x + y + z)) / 9);
         }
     }
 
 } 
 
-int main()
+void SmoothingUtility()
 {
-	//PGMImage* pgm = malloc(sizeof(PGMImage));
 	PGMImage* pgm = new PGMImage;
 	const char* ipfile;
 	const char* opfile;
-
-	ipfile = "baboon.pgm";
-	
-	opfile = "outPgm.txt";
-	printf("Input file : %s\n", ipfile);
-
-	// Process the image and print its details
-	if (readImage(pgm, ipfile))
+	ipfile = "mri.pgm";
+	if (readPGMImage(pgm, ipfile))
 	{
+		printf("Input file : %s\n", ipfile);
         meanPixel(pgm, ipfile);
-        constructImage(pgm,"smoothOut.pgm");
-		printImageDetails(pgm, ipfile, opfile);
-        
+        constructPGMImage(pgm,"smoothOut.pgm");
+		//printImageDetails(pgm, ipfile, opfile);
+		printf("Smoothing Operation Successfull!\n");
+        printf("Output File smoothOut.pgm\n");
 	}
-	return 0;
+	else
+	{
+		printf("Error Loading input Image in smoothing utility!\n");
+	}
 }
+
+/*int main()
+{
+	SmoothingUtility();
+}*/

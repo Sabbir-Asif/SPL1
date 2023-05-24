@@ -2,7 +2,6 @@
 #ifndef __IMAGE_H_
 #define __IMAGE_H_
 
-// This code can only read-write .PGM images. So first, convert all .jpg, .bmp etc images into pgm format.
 
 #include <ctype.h>
 #include <stdbool.h>

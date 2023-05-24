@@ -1,10 +1,9 @@
-#include "ImgReadAndWrite.cpp"
+#include "temp2.cpp"
 #include<cmath>
-
 void Otsu(PGMImage* pgm, const char* ipfile)
 {
     PGMImage* pgm2 = new PGMImage;
-	if (!readImage(pgm2, ipfile))
+	if (!readPGMImage(pgm2, ipfile))
 	{
 		cout << "File not Opened in Otsu function" << endl;
 		
@@ -66,28 +65,26 @@ void Otsu(PGMImage* pgm, const char* ipfile)
         }
     }
 }
-// Driver Code
-int main(int argc, char const* argv[])
+
+void OtsuUtility()
 {
 	PGMImage* pgm = new PGMImage;
 	const char* ipfile;
 	const char* opfile;
     int* histogram;
-
-	if (argc == 2)
-		ipfile = argv[1];
-	else
-		ipfile = "trafic.pgm"; 
-	
-	opfile = "outPgm.txt";
-	printf("Input file : %s\n", ipfile);
-
+	ipfile = "trafic.pgm"; 
 	// Process the image and print its details
-	if (readImage(pgm, ipfile))
+	if (readPGMImage(pgm, ipfile))
 	{
+        printf("Input file : %s\n", ipfile);
         Otsu(pgm, ipfile);
-        constructImage(pgm,"OtsuOut.pgm");
-        
+        constructPGMImage(pgm,"OtsuOut.pgm");
+        printf("Otsu Thresholding Successful!\n");
+        printf("Output file OtsuOut.bmp\n");
 	}
-	return 0;
 }
+
+/*int main()
+{
+    OtsuUtility();
+}*/

@@ -1,7 +1,7 @@
+#include "temp2.cpp"
 #include<fstream>
 #include<iomanip>
 #include<cmath>
-#include "BmpHeader.h"
 using namespace std;
 
 bool readBmpImage(BMPImage* bmp, const char* filename)
@@ -91,22 +91,23 @@ void PrintBMPDetails(BMPImage* bmp, const char* filename)
     opfile <<"\n\n--Sabbir--\n";
 
 }
-int main()
+void BMPPrintDetailsUtility()
 {
 	
 	BMPImage* bmp = new BMPImage;
 	const char* ipfile;
 	const char* opfile;
-
-	ipfile = "b52.bmp";
-	
-	opfile = "outb5.txt";
-	printf("Input file : %s\n", ipfile);
- 
+	ipfile = "blackbuck.bmp";
+	opfile = "blackbuck.txt";
 	// Process the image and print its details
 	if (readBmpImage(bmp, ipfile))
 	{
+        printf("Input file : %s\n", ipfile);
         PrintBMPDetails(bmp,opfile);
+        printf("Printing Details of BMP image Successful!\n");
 	}
-	return 0;
+    else
+    {
+        printf("Error Reading input image in BMPPrintDetailsUtility!\n");
+    }
 }

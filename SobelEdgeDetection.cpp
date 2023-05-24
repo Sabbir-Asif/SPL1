@@ -1,9 +1,6 @@
 #include"BmpReadAndWrite.cpp"
 #include<iostream>
 #include<fstream>
-using namespace std;
-
-
 void SobelEdgeDetection(BMPImage* bmp , const char* ipfile)
 {
     BMPImage* bmp2 = new BMPImage;
@@ -93,23 +90,32 @@ void SobelEdgeDetection(BMPImage* bmp , const char* ipfile)
         }
     }
 
-    const char* opfile = "SobelOut.bmp";
+    const char* opfile = "SobelOut2.bmp";
 
     constructBmpImage(bmp,opfile);
 
 }
 
-int main()
+void SobelUtility()
 {
 	
 	BMPImage* bmp = new BMPImage;
 	const char* ipfile;
-	ipfile = "flower.bmp";
-	printf("Input file : %s\n", ipfile);
+	ipfile = "blackbuck.bmp";
     if(readBmpImage(bmp,ipfile))
     {
+        printf("Input file : %s\n", ipfile);
         SobelEdgeDetection(bmp,ipfile);
+        printf("Sobel Edge detection successful!\n");
+        printf("Output file SobelOut.bmp\n");
     }
-	
-	return 0;
+    else
+    {
+        printf("Error Loading input image in Sobel Utility!\n");
+    }
 }
+
+/*int main()
+{
+    SobelUtility();
+}*/

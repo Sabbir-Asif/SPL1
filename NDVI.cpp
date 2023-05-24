@@ -1,7 +1,6 @@
-#include "BmpReadAndWrite.cpp"
+#include "temp2.cpp"
 #include <iostream>
 #include <fstream>
-using namespace std;
 
 void CalculateNDVI(BMPImage *bmp1, BMPImage *bmp2, const char *ipfile)
 {
@@ -49,7 +48,7 @@ void CalculateNDVI(BMPImage *bmp1, BMPImage *bmp2, const char *ipfile)
     cout << "Grass Land = " << (grassLandCount * 100) / totalPixels << "%\n";
     cout << "Healthy Plant = " << (healthyVegetationCount * 100) / totalPixels << "%\n";
 }
-int main()
+void NdviUtility()
 {
 
     BMPImage *bmp1 = new BMPImage;
@@ -61,12 +60,15 @@ int main()
     ipfile1 = "b42.bmp";
     ipfile2 = "b52.bmp";
     opfile = "outNDVI.bmp";
-    printf("Input file : %s %s\n", ipfile1, ipfile2);
-
-    // Process the image and print its details
     if (readBmpImage(bmp1, ipfile1) && readBmpImage(bmp2, ipfile2))
     {
+        printf("Input file : %s %s\n", ipfile1, ipfile2);
         CalculateNDVI(bmp1, bmp2, ipfile1);
+        printf("NDVI Operation successful!\n");
     }
-    return 0;
+    else
+    {
+        printf("Error loading image in NDVI utility!\n");
+    }
 }
+

@@ -41,7 +41,7 @@ struct bmpColorHeader{
     unsigned int green; //green channel bitmask
     unsigned int blue; //blue channel bitmask
     unsigned int alpha; //alpha channel bitmask
-    unsigned int color;    //color space type usually sRGB default
+    unsigned int color;
 };
 
 //contains bmp color table information

@@ -11,7 +11,7 @@ bool readBmpImage(BMPImage* bmp, const char* filename)
     if(inputFile.eof())
     {
         cout << "Error opening input BMP image!\n";
-        return EXIT_FAILURE;
+        return false;
     }
 
     inputFile.seekg(0,ios::beg);
@@ -69,24 +69,4 @@ void constructBmpImage(BMPImage* bmp, char const* filename)
 
     outputFile.write((char*)&bmp->colorTable,sizeof(bmp->colorTable));
     outputFile.close();
-}
-
-int main()
-{
-	
-	BMPImage* bmp = new BMPImage;
-	const char* ipfile;
-	const char* opfile;
-
-	ipfile = "b5.bmp";
-	
-	opfile = "outbmp.bmp";
-	printf("Input file : %s\n", ipfile);
- 
-	// Process the image and print its details
-	if (readBmpImage(bmp, ipfile))
-	{
-        constructBmpImage(bmp,opfile);
-	}
-	return 0;
 }

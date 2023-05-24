@@ -23,7 +23,7 @@ void ignoreComments(FILE* fp)
 }
 
 // Function to open the input a PGM file and process it
-bool readImage(PGMImage* pgm,const char* filename)
+bool readPGMImage(PGMImage* pgm,const char* filename)
 {
 	// Open the image file in the 'read binary' mode
 	FILE* pgmfile = fopen(filename, "rb");
@@ -83,7 +83,7 @@ bool readImage(PGMImage* pgm,const char* filename)
 	return true;
 }
 // Function to print the file details
-void printImageDetails(PGMImage* pgm, const char* filename,const char* filename2)
+void printImageDetailsPGM(PGMImage* pgm, const char* filename,const char* filename2)
 {
 	FILE* pgmfile = fopen(filename, "rb");
 	FILE* outputFile = fopen(filename2, "w");
@@ -130,7 +130,7 @@ void printImageDetails(PGMImage* pgm, const char* filename,const char* filename2
 }
 
 // Constracting image from the retrived data
-void constructImage(PGMImage* pgm, char const* filename)
+void constructPGMImage(PGMImage* pgm, char const* filename)
 {
     FILE* pgmOut = fopen(filename, "wb");
     fprintf(pgmOut,"%c%c\n",pgm->pgmType[0],pgm->pgmType[1]);

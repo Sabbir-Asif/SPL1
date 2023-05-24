@@ -1,4 +1,4 @@
-#include "ImgReadAndWrite.cpp"
+#include "temp2.cpp"
 #include<cmath>
 int histogram[256];
 int* createHistogram(PGMImage* pgm)
@@ -84,33 +84,32 @@ void printHistogram(int histogram[], int N)
     }
 }
 
-// Driver Code
-int main(int argc, char const* argv[])
+void HistogramEqualisationUtility()
 {
-	//PGMImage* pgm = malloc(sizeof(PGMImage));
 	PGMImage* pgm = new PGMImage;
 	const char* ipfile;
 	const char* opfile;
     int* histogram;
 
-	if (argc == 2)
-		ipfile = argv[1];
-	else
-		ipfile = "images.pgm"; 
-	
-	opfile = "outPgm.txt";
+	ipfile = "images.pgm"; 
 	printf("Input file : %s\n", ipfile);
-
-	// Process the image and print its details
-	if (readImage(pgm, ipfile))
+	if (readPGMImage(pgm, ipfile))
 	{
-        
 		histogram = createHistogram(pgm);
-        printHistogram(histogram,pgm->maxColorValue);
+        //printHistogram(histogram,pgm->maxColorValue);
         histogram = histogramEqualization(pgm,histogram);
-        printHistogram(histogram,pgm->maxColorValue);
-        constructImage(pgm,"EhistogramtOut.pgm");
-        
+       // printHistogram(histogram,pgm->maxColorValue);
+        constructPGMImage(pgm,"EhistogramtOut.pgm");
+        printf("Histogram equalisation Operation Successful!\n");
 	}
-	return 0;
+    else
+    {
+        printf("Error Loading Image in Histogram equalisation Utility!\n");
+    }
+
 }
+
+/*int main()
+{
+    HistogramEqualisationUtility();
+}*/

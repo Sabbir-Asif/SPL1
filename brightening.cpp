@@ -1,5 +1,4 @@
-#include "ImgReadAndWrite.cpp"
-
+#include "temp2.cpp"
 void brightening(PGMImage* pgm)
 {
     cout << "---------------------Brightening--------------------\n\n";
@@ -24,34 +23,28 @@ void brightening(PGMImage* pgm)
            }
         }
     }
-
-    cout << "Operation Successful!\n\n" << endl;
 }
 
 
-int main(int argc, char const* argv[])
+void BrighteningUtility()
 {
-	//PGMImage* pgm = malloc(sizeof(PGMImage));
 	PGMImage* pgm = new PGMImage;
 	const char* ipfile;
 	const char* opfile;
     int* histogram;
 
-	if (argc == 2)
-		ipfile = argv[1];
-	else
 		ipfile = "moon.pgm";
-	
+
 	opfile = "outPgm.txt";
-	printf("\n\nInput file : %s\n", ipfile);
 	// Process the image and print its details
-	if (readImage(pgm, ipfile))
+	if (readPGMImage(pgm, ipfile))
 	{
+        printf("\n\nInput file : %s\n", ipfile);
         brightening(pgm);
-        constructImage(pgm,"brightenImage.pgm");
+        constructPGMImage(pgm,"brightenImage.pgm");
+        printf("Brightening Successful!\n");
         
 	}
-	return 0;
 }
 
 

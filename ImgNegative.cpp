@@ -1,5 +1,4 @@
-#include "ImgReadAndWrite.cpp"
-
+#include "temp2.cpp"
 void negativeImage(PGMImage* pgm)
 {
      for(int i = 0; i < pgm->height ; i++)
@@ -7,30 +6,39 @@ void negativeImage(PGMImage* pgm)
         for(int j = 0 ; j < pgm->width; j++)
         {
             pgm->data[i][j] = 255 - pgm->data[i][j]; 
+			if(pgm->data[i][j] < 127)
+			{
+				pgm->data[i][j]= 0;
+			}
+			else
+			{
+				if(pgm->data[i][j] > 220)
+				{
+					pgm->data[i][j] = 210;
+				}
+			}
         }
     }
 }
 
-int main()
+void NegativeUtility()
 {
-	//PGMImage* pgm = malloc(sizeof(PGMImage));
 	PGMImage* pgm = new PGMImage;
 	const char* ipfile;
 	const char* opfile;
-
 	ipfile = "mri.pgm";
-	
 	opfile = "outPgm.txt";
-	printf("Input file : %s\n", ipfile);
- 
-	// Process the image and print its details
-	if (readImage(pgm, ipfile))
+	if (readPGMImage(pgm, ipfile))
 	{
+		printf("Input file : %s\n", ipfile);
         negativeImage(pgm);
-        constructImage(pgm,"Negative.pgm");
-		//printImageDetails(pgm, ipfile, opfile);
-        
+        constructPGMImage(pgm,"Negative.pgm");
+		printf("Negative Image Operation Successful!\n");
 	}
-	return 0;
+	else
+	{
+		printf("Error Reading Input Image in Negative Utility!\n");
+	}
 }
+
 
